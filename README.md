@@ -35,6 +35,7 @@ Guide for recreating computational results:
 
 
 Citation for project overview and computational methods:
+   
    A. Big picture inspiration for examining statistical power of sexual dimorphism related claims in recent studies:
     Clayton, J. A., & Collins, F. S. (2014). Policy: NIH to balance sex in cell and animal studies. Nature, 509(7500), 282-283. doi:10.1038/509282a
     https://www.nature.com/news/policy-nih-to-balance-sex-in-cell-and-animal-studies-1.15195 

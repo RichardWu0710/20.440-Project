@@ -1,0 +1,65 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+rm(list = ls())
+library(limma)
+library(Glimma)
+library(edgeR)
+
+GSE102556_HumanMDD_fpkmtab <- read.delim("C:/Users/weida/Desktop/20.440/Project/GSE102556_HumanMDD_fpkmtab.txt", row.names=1)
+FPKM_ba25 = GSE102556_HumanMDD_fpkmtab[98:143]
+```
+
+```{r}
+age <- c(47,41,31,19,46,40,49,33,38,53,39,55,38,25,22,28,46,55,44,29,68,39,40,63,25,54,48,67,46,32,52,55,72,41,29,45,48,82,36,52,60,22,68,59,59,51)
+
+vmPFC_RIN <- c(8.3,6.9,7.9,6.3,6.8,6.1,7.4,7.7,7.8,5.8,5.1,7.6,6.8,4.7,6.6,5,7.5,5.7,5.9,5.7,6.7,6.5,7.5,7.6,5.9,6,6.4,7.6,5.6,6.4,5.1,6.3,5.3,5.8,5.7,7.6,6.8,6.4,7.3,5.5,7.3,6.3,6.1,8,7.7,6.4)
+
+alcohol <- c('no','no','no','NA','no','NA','yes','no','NA','no','no','yes','NA','NA','no','NA','NA','No','NA','no','yes','no','NA','yes','NA','No','no','yes','no','NA','NA','No','no','NA','NA','no','NA','NA','No','NA','no','NA','NA','NA','NA','no')
+
+medic <- c('no','no','no','no','no','no','NA','NA','NA','NA','yes','no','NA','NA','yes','no','yes','yes','yes','no','NA','yes','yes','yes','yes','yes','no','no','no','yes','no','yes','no','NA','NA','yes','NA','NA','yes','NA','no','no','NA','yes','NA','no')
+
+group <- c('M_CTRL','M_CTRL','M_CTRL','M_CTRL','M_CTRL','M_CTRL','M_MDD','M_CTRL','M_CTRL','M_MDD','M_MDD','M_CTRL','M_MDD','F_MDD','M_MDD','M_MDD','F_MDD','F_MDD','F_CTRL','M_MDD','M_MDD','M_MDD','F_MDD','M_MDD','F_MDD','F_MDD','M_MDD','M_MDD','M_CTRL','F_MDD','M_CTRL','F_MDD','F_CTRL','F_MDD','M_CTRL','F_CTRL','F_MDD','F_CTRL','F_MDD','F_MDD','F_CTRL','F_CTRL','F_CTRL','F_MDD','M_CTRL','F_CTRL')
+
+
+samples <- data.frame('group'=group,'age'=age, 'vmPFC_RIN'=vmPFC_RIN, 'alcohol'=alcohol, 'medic'=medic)
+genes <- rownames(GSE102556_HumanMDD_fpkmtab)
+genes <- data.frame('genes'=genes)
+
+```
+
+
+```{r}
+design <- model.matrix(~0+group+age+vmPFC_RIN+alcohol+medic)
+
+contr.matrix <- makeContrasts(
+   #M_MDDvsCTRL = "groupM_MDD - groupM_CTRL", 
+   F_MDDvsCTRL = "groupF_MDD - groupF_CTRL", 
+   levels = design)
+
+deg <-DGEList(counts = FPKM_ba25, samples = samples, group = group, genes = genes, remove.zeros = TRUE)
+
+keep <- filterByExpr(deg , design) 
+deg  <- deg [keep,,keep.lib.sizes=FALSE]
+v <- voom(deg, design, plot=FALSE)
+fit <- lmFit(v, design)
+vfit <- contrasts.fit(fit, contrasts=contr.matrix)
+efit <- eBayes(vfit, trend = TRUE)
+#efit <- treat(efit, lfc=log2(1.07))
+
+
+```
+
+```{r}
+summary(decideTests(efit))
+result <- topTable(efit, coef=1, number=Inf,adjust.method="none",sort.by="logFC", p.value=0.05, confint=FALSE)
+#write.csv(result,file="DEGlist_vmPFC_M.csv")
+write.csv(result,file="DEGlist_vmPFC_F.csv")
+```

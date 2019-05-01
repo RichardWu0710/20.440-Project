@@ -1,0 +1,105 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+rm(list = ls())
+library(limma)
+library(Glimma)
+library(edgeR)
+
+GSE102556_HumanMDD_fpkmtab <- read.delim("C:/Users/weida/Desktop/20.440/Project/GSE102556_HumanMDD_fpkmtab.txt", row.names=1)
+FPKM_nac = GSE102556_HumanMDD_fpkmtab[1:48]
+```
+
+```{r}
+age <- c(47,41,31,19,46,40,49,33,38,53,39,55,38,25,22,28,46,55,44,29,68,39,40,63,25,54,48,67,46,32,52,55,79,64,72,41,29,45,48,82,36,52,60,22,68,59,59,51)
+
+Nac_RIN <- c(7.6,8,7.1,6.5,7.5,5.6,7.2,7.8,5.9,7.7,4.9,4.4,7.7,8.1,8.4,7.5,8.4,8,7.2,7.7,8.2,7.5,7.7,7.8,7.6,8.7,8.5,8.3,8.8,8.3,6.8,7.7,7.2,8.1,7.4,7.5,7.5,7.8,7.3,7.6,7.8,7.8,8.3,8.2,8.2,9.1,8.6,7.8)
+
+alcohol <- c('no','no','no','NA','no','NA','yes','no','NA','no','no','yes','NA','NA','no','NA','NA','No','NA','no','yes','no','NA','yes','NA','No','no','yes','no','NA','NA','No','no','no','no','NA','NA','no','NA','NA','No','NA','no','NA','NA','NA','NA','no')
+
+medic <- c('no','no','no','no','no','no','NA','NA','NA','NA','yes','no','NA','NA','yes','no','yes','yes','yes','no','NA','yes','yes','yes','yes','yes','no','no','no','yes','no','yes','no','yes','no','NA','NA','yes','NA','NA','yes','NA','no','no','NA','yes','NA','no')
+
+group <- c('M_CTRL','M_CTRL','M_CTRL','M_CTRL','M_CTRL','M_CTRL','M_MDD','M_CTRL','M_CTRL','M_MDD','M_MDD','M_CTRL','M_MDD','F_MDD','M_MDD','M_MDD','F_MDD','F_MDD','F_CTRL','M_MDD','M_MDD','M_MDD','F_MDD','M_MDD','F_MDD','F_MDD','M_MDD','M_MDD','M_CTRL','F_MDD','M_CTRL','F_MDD','F_CTRL','M_MDD','F_CTRL','F_MDD','M_CTRL','F_CTRL','F_MDD','F_CTRL','F_MDD','F_MDD','F_CTRL','F_CTRL','F_CTRL','F_MDD','M_CTRL','F_CTRL')
+samples <- data.frame('group'=group, 'age'=age, 'Nac_RIN'=Nac_RIN, 'alcohol'=alcohol, 'medic'=medic)
+genes <- rownames(GSE102556_HumanMDD_fpkmtab)
+genes <- data.frame('genes'=genes)
+
+M_CTRL_ind = which(group %in% "M_CTRL")
+M_MDD_ind = which(group %in% "M_MDD")
+```
+
+```{r}
+n_per = 1000
+n = 0
+collect <- data.frame(name = genes$genes, matrix(, nrow=length(genes$genes), ncol=n_per))
+og_genelist <- as.vector(genes$genes)
+
+for (i in c(1:n_per)){
+  new_g <- group
+  new_CTRL_ind = sample(M_CTRL_ind, 8)
+  new_MDD_ind = sample(M_MDD_ind, 8)
+  new_g[new_CTRL_ind]
+  for(m in new_CTRL_ind){new_g[m]="M_CTRL_t"}
+  for(n in new_MDD_ind){new_g[n]="M_MDD_t"}
+  
+  #design <- model.matrix(~0+sex:group)
+  #design <- model.matrix(~0+group)
+  #covar <- model.matrix(~0+age+aINS_RIN+alcohol+medic)
+  design <- model.matrix(~0+new_g+age+aINS_RIN+alcohol+medic)
+  #design <- cbind(design,covar)
+  #x <- c("F_CTRL","M_CTRL","F_MDD","M_MDD","age","aINS_RIN","alcoholNA","alcoholno","alcoholNo","alcoholyes","medicno","medicyes")
+  #colnames(design) <- gsub("group", "", x)
+
+  contr.matrix <- makeContrasts(
+     M_MDDvsCTRL = "new_gM_MDD_t - new_gM_CTRL_t", 
+     #F_MDDvsCTRL = "groupF_MDD - groupF_CTRL", 
+     levels = design)
+  
+  
+  deg <-DGEList(counts = FPKM_nac, samples = samples, group = new_g, genes = genes, remove.zeros = TRUE)
+  
+  keep <- filterByExpr(deg , design) 
+  deg  <- deg [keep,,keep.lib.sizes=FALSE]
+  v <- voom(deg, design, plot=FALSE)
+  fit <- lmFit(v, design)
+  vfit <- contrasts.fit(fit, contrasts=contr.matrix)
+  efit <- eBayes(vfit, trend = TRUE)
+  efit <- treat(efit, lfc=log2(1.07))
+  pval <- efit$p.value
+  sig_ind <- which(pval<0.05)
+  genelist <- efit$genes
+  genelist <- as.vector(genelist$genes)
+  sig_gene <- genelist[sig_ind]
+  matched_ind <- match(sig_gene, og_genelist)                   
+  for (j in matched_ind){collect[j,i+1] = 1}
+}
+
+```
+
+```{r}
+#summary(decideTests(efit))
+write.csv(collect,file="collect.csv")
+#```
+
+#```{r}
+#result <- topTable(efit, coef=1, number=Inf,adjust.method="none",sort.by="logFC", p.value=0.05, confint=FALSE)
+#write.csv(result,file="result.csv")
+```
+
+
+
+
+
+
+
+
+
+
+

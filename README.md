@@ -1,7 +1,10 @@
 Purpose/summery statement: 
 
 In 1993, the NIH passed the Revitalization Act, which required the inclusion of women in clinical research. Since then, the dosing of many drugs has been adjusted for sex differences. Starting in 2014, the NIH has been enforcing preclinical research to have balanced cohorts of sex as represented in cell and animal studies. As a result, the field of biomedical research has had increasing pressure to represent both male and female differences in all levels of study. While this has led to greater inclusion in scientific studies, false biases in sex-based clinical decision-making may arise due to researchers implicitly crediting sex differences to varing disease genotypes while ignoring more relevant factors.  By crediting sex differences as main drivers of disease genotypes, it incentivizes drug developments and clinical practice to look for sex-specific factors, which will directly influence patient outcomes. We argue that declaring sexual dimorphism in a disease is a weighty claim, and we should assure that adequate statistical methodology was used to reach this claim.  
+
 In our study, we chose to first analyze a bulk RNA-seq dataset from a 2017 Nature Medicine paper that claims sex-specific transcriptional signatures in human depression.2  The paper asserts that in patients with Major Depressive Disorder (MDD), there are very small overlaps in differentially expressed genes (DEGs) in brain tissue specimens between male and female subjects when compared to healthy controls. We employed boostrapping methodology and pricinple component analysis to evaluate the statistical power of the published DEG identification method and identified primary factors for differential gene expression. We discovered that the small overlap of differentially expressed genes between male and female subjects is a result of (1) low statistical power due to relatively small cohort size and (2) intrinsic  gene expression heterogeneity across subjects. Futhurmore, we applied the same computational pipeline for DEG generation and Gene Set Enrichment Analysis (GSEA) on a seperate RNA-seq dataset adapted from a study involving whole-transcriptome brain expression and exon-usage profiling in major depression and suicide. We discovered heavy overlaps in enriched gene sets between male and female subjects, which highlights the need for more through examination of sample data quality prior to drawing biological conclusions relating to sexual dimorphism in disease genotypes. 
+
+
 
 
 Repo structure:
@@ -10,6 +13,8 @@ Repo structure:
     1.	Data directory (“data”) which contains all input data for computational analysis and a readme file that contains more detailed information about each data file.
     2.	Source code directory (“code”) which contains all necessary code for generating differential expressed gene list and generating three main plots in our study. A readme file is also included to specify the purpose of each code file.
     3.	Readme file which contains information of the overall narrative of this project and explanation of the computational pipeline that leads to generation of the DEG lists and figures
+
+
 
 
 Guide for recreating computational results:

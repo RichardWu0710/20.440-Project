@@ -73,20 +73,29 @@ Guide for recreating computational results:
 Citation for project overview and computational methods:
    
    A. Big picture inspiration for examining statistical power of sexual dimorphism related claims in recent studies:
-    Clayton, J. A., & Collins, F. S. (2014). Policy: NIH to balance sex in cell and animal studies. Nature, 509(7500), 282-283. doi:10.1038/509282a
+    
+   Clayton, J. A., & Collins, F. S. (2014). Policy: NIH to balance sex in cell and animal studies. Nature, 509(7500), 282-283. doi:10.1038/509282a
     https://www.nature.com/news/policy-nih-to-balance-sex-in-cell-and-animal-studies-1.15195 
 
    B. Datasets: 
-    Main dataset which includes bulk RNA seq data from a cohort of 46 patients, pormartal brain tissues specimen from public brain banks: 
-    Labonte et al (2017), Sex-specific transcriptional signatures in human depression, Nat Medicine 2017 https://www.nature.com/articles/nm.4386#methods 
-    Second dataset for DEG overlap validation from a separate study which includes MDD brain bulk RNA seq data in additional to RNA seq data from non-suidcide control group: 
-    Pantazotos et al (2017), Whole-transcriptome brain expression and exon-usage profiling in major depression and suicide, Mol Psychiatry
+    
+   Main dataset which includes bulk RNA seq data from a cohort of 46 patients, pormartal brain tissues specimen from public brain banks: 
+    
+   Labonte et al (2017), Sex-specific transcriptional signatures in human depression, Nat Medicine 2017 https://www.nature.com/articles/nm.4386#methods 
+    
+   Second dataset for DEG overlap validation from a separate study which includes MDD brain bulk RNA seq data in additional to RNA seq data from non-suidcide control group: 
+    
+   Pantazotos et al (2017), Whole-transcriptome brain expression and exon-usage profiling in major depression and suicide, Mol Psychiatry
     https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5313378/
 
    C. Computational methods: 
-    RNA-Seq differential expression analysis: An extended review and a software tool, Plos One 2017
+    
+   RNA-Seq differential expression analysis: An extended review and a software tool, Plos One 2017
     https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0190152 
-    Smyth, G. K., et al (2019).  Limma: Linear Models for Microarray and RNA-Seq Data User’s Guide
+    
+   Smyth, G. K., et al (2019).  Limma: Linear Models for Microarray and RNA-Seq Data User’s Guide
     https://www.bioconductor.org/packages/devel/bioc/vignettes/limma/inst/doc/usersguide.pdf
-    Law, C. et al (2018). RNA-seq analysis is easy as 1-2-3 with limma, Glimma and edgeR. .https://www.bioconductor.org/packages/devel/workflows/vignettes/RNAseq123/inst/doc/limmaWorkflow.html?fbclid=IwAR2WVCMVdGdE203rAldtpxo8g043Li1toaiS4TnHU-Fo0QtxEQUvYjEA9KM
-    A comprehensive evaluation of normalization methods for Illumina high-throughput RNA sequencing data analysis, Briefings in Bioinformatics 2013.  https://academic.oup.com/bib/article/14/6/671/189645
+    
+   Law, C. et al (2018). RNA-seq analysis is easy as 1-2-3 with limma, Glimma and edgeR. .https://www.bioconductor.org/packages/devel/workflows/vignettes/RNAseq123/inst/doc/limmaWorkflow.html?fbclid=IwAR2WVCMVdGdE203rAldtpxo8g043Li1toaiS4TnHU-Fo0QtxEQUvYjEA9KM
+    
+   A comprehensive evaluation of normalization methods for Illumina high-throughput RNA sequencing data analysis, Briefings in Bioinformatics 2013.  https://academic.oup.com/bib/article/14/6/671/189645
